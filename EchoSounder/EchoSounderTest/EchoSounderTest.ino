@@ -12,13 +12,13 @@
  */
 
 
-#define echoPin 3 // Echo Pin
-#define trigPin 4 // Trigger Pin
-#define voltagePin 5 // Echo Pin
-#define gndPin 2 // Trigger Pin
+#define echoPin 4 // Echo Pin
+#define trigPin 3 // Trigger Pin
+#define voltagePin 2 // Echo Pin
+#define gndPin 5 // Trigger Pin
 #define LEDPin 12 // Onboard LED
 
-int maximumRange = 200; // Maximum range needed
+int maximumRange = 500; // Maximum range needed
 int minimumRange = 0; // Minimum range needed
 long duration, distance; // Duration used to calculate distance
 
