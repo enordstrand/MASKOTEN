@@ -23,7 +23,7 @@ int minimumRange = 0; // Minimum range needed
 long duration, distance; // Duration used to calculate distance
 
 void setup() {
- Serial.begin (9600);
+ Serial.begin (115200);
  pinMode(trigPin, OUTPUT);
  pinMode(echoPin, INPUT);
  pinMode(voltagePin, OUTPUT);
@@ -34,7 +34,6 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("tast");
 /* The following trigPin/echoPin cycle is used to determine the
  distance of the nearest object by bouncing soundwaves off of it. */ 
  digitalWrite(trigPin, LOW); 
