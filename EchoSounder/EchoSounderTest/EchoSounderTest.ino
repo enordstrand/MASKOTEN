@@ -34,7 +34,6 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("test");
 /* The following trigPin/echoPin cycle is used to determine the
  distance of the nearest object by bouncing soundwaves off of it. */ 
  digitalWrite(trigPin, LOW); 
