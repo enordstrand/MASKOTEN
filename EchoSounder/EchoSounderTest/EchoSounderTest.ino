@@ -11,12 +11,11 @@
  on 10 Nov 2012.
  */
 
-
-#define echoPin 4 // Echo Pin
-#define trigPin 3 // Trigger Pin
-#define voltagePin 2 // Echo Pin
-#define gndPin 5 // Trigger Pin
-#define LEDPin 12 // Onboard LED
+#define gndPin 17 // Ground Pin
+#define echoPin 16 // Echo Pin
+#define trigPin 15 // Trigger Pin
+#define voltagePin 14 // vcc Pin
+#define LEDPin 13 // Onboard LED
 
 int maximumRange = 500; // Maximum range needed
 int minimumRange = 0; // Minimum range needed
