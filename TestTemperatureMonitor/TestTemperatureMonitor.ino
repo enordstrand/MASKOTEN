@@ -1,6 +1,8 @@
 // Demo: NMEA2000 library. Send main cabin temperature to the bus.
 
 #include <Arduino.h>
+#include <MemoryFree.h>
+#define N2k_SPI_CS_PIN 10
 #include <NMEA2000_CAN.h>  // This will automatically choose right CAN library and create suitable NMEA2000 object
 #include <N2kMessages.h>
 
@@ -24,17 +26,15 @@ void setup() {
   // Uncomment 2 rows below to see, what device will send to bus. Use e.g. OpenSkipper or Actisense NMEA Reader                           
   Serial.begin(115200);
   NMEA2000.SetForwardStream(&Serial);
-  Serial.println("1");
-  Serial.println("2");
-  Serial.println("3");
-  Serial.println("4");
   // If you want to use simple ascii monitor like Arduino Serial Monitor, uncomment next line
   //NMEA2000.SetForwardType(tNMEA2000::fwdt_Text); // Show in clear text. Leave uncommented for default Actisense format.
 
   // If you also want to see all traffic on the bus use N2km_ListenAndNode instead of N2km_NodeOnly below
-  NMEA2000.SetMode(tNMEA2000::N2km_NodeOnly,22);
-  NMEA2000.SetDebugMode(tNMEA2000::dm_Actisense); // Uncomment this, so you can test code without CAN bus chips on Arduino Mega
-  //NMEA2000.EnableForward(false); // Disable all msg forwarding to USB (=Serial)
+  NMEA2000.SetMode(tNMEA2000::N2km_NodeOnly,3);
+  //NMEA2000.SetDebugMode(tNMEA2000::dm_Actisense); // Uncomment this, so you can test code without CAN bus chips on Arduino Mega
+  NMEA2000.EnableForward(false); // Disable all msg forwarding to USB (=Serial)
+  NMEA2000.SetN2kCANMsgBufSize(2);
+  NMEA2000.SetN2kCANSendFrameBufSize(30);
   // Here we tell library, which PGNs we transmit
   NMEA2000.ExtendTransmitMessages(TransmitMessages);
   NMEA2000.Open();
@@ -54,7 +54,7 @@ double ReadWaterTemp() {
   return CToKelvin(15.5); // Read here the true temperature e.g. from analog input
 }
 
-#define TempUpdatePeriod 2500
+#define TempUpdatePeriod 2000
 
 void SendN2kTemperature() {
   static unsigned long TempUpdated=millis();
@@ -62,6 +62,8 @@ void SendN2kTemperature() {
 
   if ( TempUpdated+TempUpdatePeriod<millis() ) {
     TempUpdated=millis();
+    //Serial.print("freeMemory()=");
+    //Serial.println(freeMemory());
     SetN2kTemperature(N2kMsg, 1, 1, N2kts_MainCabinTemperature, ReadCabinTemp());
     NMEA2000.SendMsg(N2kMsg);
     SetN2kEnvironmentalParameters(N2kMsg, 1, N2kts_MainCabinTemperature, ReadCabinTemp());
