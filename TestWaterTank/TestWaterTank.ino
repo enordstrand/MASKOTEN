@@ -6,10 +6,29 @@
 #include <NMEA2000_CAN.h>  // This will automatically choose right CAN library and create suitable NMEA2000 object
 #include <N2kMessages.h>
 
+#define gndPin 17 // Ground Pin
+#define echoPin 16 // Echo Pin
+#define trigPin 15 // Trigger Pin
+#define voltagePin 14 // vcc Pin
+#define LEDPin 13 // Onboard LED
+
+int maximumRange = 500; // Maximum range needed
+int minimumRange = 0; // Minimum range needed
+long duration, distance; // Duration used to calculate distance
+
 // List here messages your device will transmit.
 const unsigned long TransmitMessages[] PROGMEM={127505L,0};
 
 void setup() {
+  Serial.begin (115200);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(voltagePin, OUTPUT);
+  digitalWrite(voltagePin, HIGH);
+  pinMode(gndPin, OUTPUT);
+  digitalWrite(gndPin, LOW);
+  pinMode(LEDPin, OUTPUT); // Use LED indicator (if required)
+  
   // Set Product information
   NMEA2000.SetProductInformation("00000003", // Manufacturer's Model serial code
                                  100, // Manufacturer's product code
@@ -47,7 +66,33 @@ void loop() {
 }
 
 double ReadTankPercent() {
-  return 42; // Tank level in % of full tank.
+  /* The following trigPin/echoPin cycle is used to determine the
+  distance of the nearest object by bouncing soundwaves off of it. */ 
+  digitalWrite(trigPin, LOW); 
+  delayMicroseconds(2); 
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10); 
+ 
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+ 
+  //Calculate the distance (in cm) based on the speed of sound.
+  distance = duration/58.2;
+
+  if (distance >= maximumRange || distance <= minimumRange){
+    /* Send a negative number to computer and Turn LED ON 
+    to indicate "out of range" */
+    //Serial.println("-1");
+    //digitalWrite(LEDPin, HIGH); 
+  } else {
+    /* Send the distance to the computer using Serial protocol, and
+    turn LED OFF to indicate successful reading. */
+    //Serial.println(distance);
+    //digitalWrite(LEDPin, LOW); 
+  }
+  Serial.println(distance/2);
+  return distance/2; // Tank level in % of full tank.
 }
 
 double ReadTankCapacity() {
