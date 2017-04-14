@@ -1,4 +1,4 @@
-// Demo: NMEA2000 library. Send main wind data to the bus.
+// Demo: NMEA2000 library. Send main water tank data to the bus.
 
 #include <Arduino.h>
 #include <MemoryFree.h>
@@ -7,21 +7,21 @@
 #include <N2kMessages.h>
 
 // List here messages your device will transmit.
-const unsigned long TransmitMessages[] PROGMEM={130306L,0};
+const unsigned long TransmitMessages[] PROGMEM={127505L,0};
 
 void setup() {
   // Set Product information
-  NMEA2000.SetProductInformation("00000002", // Manufacturer's Model serial code
+  NMEA2000.SetProductInformation("00000003", // Manufacturer's Model serial code
                                  100, // Manufacturer's product code
-                                 "Simple wind monitor",  // Manufacturer's Model ID
-                                 "1.1.0.22 (2016-12-31)",  // Manufacturer's Software version code
-                                 "1.1.0.0 (2016-12-31)" // Manufacturer's Model version
+                                 "ArduWater monitor",  // Manufacturer's Model ID
+                                 "1.0.0.0 (2017-04-14)",  // Manufacturer's Software version code
+                                 "1.0.0.0 (2016-12-31)" // Manufacturer's Model version
                                  );
   // Set device information
-  NMEA2000.SetDeviceInformation(1, // Unique number. Use e.g. Serial number.
-                                130, // Device function=Atmospheric. See codes on http://www.nmea.org/Assets/20120726%20nmea%202000%20class%20&%20function%20codes%20v%202.00.pdf
-                                85, // Device class=External Environment. See codes on  http://www.nmea.org/Assets/20120726%20nmea%202000%20class%20&%20function%20codes%20v%202.00.pdf
-                                2046 // Just choosen free from code list on http://www.nmea.org/Assets/20121020%20nmea%202000%20registration%20list.pdf                               
+  NMEA2000.SetDeviceInformation(1337, // Unique number. Use e.g. Serial number.
+                                150, // Device function=Fluid Leve. See codes on http://www.nmea.org/Assets/20120726%20nmea%202000%20class%20&%20function%20codes%20v%202.00.pdf
+                                75, // Device class=Sensor Communication Interface. See codes on  http://www.nmea.org/Assets/20120726%20nmea%202000%20class%20&%20function%20codes%20v%202.00.pdf
+                                1337 // Just choosen free from code list on http://www.nmea.org/Assets/20121020%20nmea%202000%20registration%20list.pdf                               
                                );
   // Uncomment 2 rows below to see, what device will send to bus. Use e.g. OpenSkipper or Actisense NMEA Reader                           
   Serial.begin(115200);
@@ -42,21 +42,21 @@ void setup() {
 
 
 void loop() {
-  SendN2kWind();
+  SendN2kWaterFluid();
   NMEA2000.ParseMessages();
 }
 
-double ReadWindAngle() {
-  return DegToRad(50); // Read here the measured wind angle e.g. from analog input
+double ReadTankPercent() {
+  return 42; // Tank level in % of full tank.
 }
 
-double ReadWindSpeed() {
-  return 20.3; // Read here the wind speed e.g. from analog input
+double ReadTankCapacity() {
+  return 100; // Tank Capacity in litres
 }
 
 #define WindUpdatePeriod 1000
 
-void SendN2kWind() {
+void SendN2kWaterFluid() {
   static unsigned long WindUpdated=millis();
   tN2kMsg N2kMsg;
 
@@ -64,7 +64,7 @@ void SendN2kWind() {
     WindUpdated=millis();
     //Serial.print("freeMemory()=");
     //Serial.println(freeMemory());
-    SetN2kWindSpeed(N2kMsg, 3, ReadWindSpeed(), ReadWindAngle(),N2kWind_Apprent);
+    SetN2kFluidLevel(N2kMsg, 1, N2kft_Water, ReadTankPercent(), ReadTankCapacity());
     NMEA2000.SendMsg(N2kMsg);
   }
 }
