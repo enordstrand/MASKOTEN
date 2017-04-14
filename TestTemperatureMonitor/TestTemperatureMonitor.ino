@@ -13,7 +13,7 @@ void setup() {
   // Set Product information
   NMEA2000.SetProductInformation("00000001", // Manufacturer's Model serial code
                                  100, // Manufacturer's product code
-                                 "Simple temp monitor",  // Manufacturer's Model ID
+                                 "Awesome Temp",  // Manufacturer's Model ID
                                  "1.1.0.21 (2016-12-31)",  // Manufacturer's Software version code
                                  "1.1.0.0 (2016-12-31)" // Manufacturer's Model version
                                  );
@@ -27,12 +27,12 @@ void setup() {
   Serial.begin(115200);
   NMEA2000.SetForwardStream(&Serial);
   // If you want to use simple ascii monitor like Arduino Serial Monitor, uncomment next line
-  //NMEA2000.SetForwardType(tNMEA2000::fwdt_Text); // Show in clear text. Leave uncommented for default Actisense format.
+  NMEA2000.SetForwardType(tNMEA2000::fwdt_Text); // Show in clear text. Leave uncommented for default Actisense format.
 
   // If you also want to see all traffic on the bus use N2km_ListenAndNode instead of N2km_NodeOnly below
-  NMEA2000.SetMode(tNMEA2000::N2km_NodeOnly,3);
-  //NMEA2000.SetDebugMode(tNMEA2000::dm_Actisense); // Uncomment this, so you can test code without CAN bus chips on Arduino Mega
-  NMEA2000.EnableForward(false); // Disable all msg forwarding to USB (=Serial)
+  NMEA2000.SetMode(tNMEA2000::N2km_NodeOnly,23);
+  // NMEA2000.SetDebugMode(tNMEA2000::dm_Actisense); // Uncomment this, so you can test code without CAN bus chips on Arduino Mega
+  // NMEA2000.EnableForward(false); // Disable all msg forwarding to USB (=Serial)
   NMEA2000.SetN2kCANMsgBufSize(2);
   NMEA2000.SetN2kCANSendFrameBufSize(30);
   // Here we tell library, which PGNs we transmit
@@ -51,7 +51,7 @@ double ReadCabinTemp() {
 }
 
 double ReadWaterTemp() {
-  return CToKelvin(15.5); // Read here the true temperature e.g. from analog input
+  return CToKelvin(42.5); // Read here the true temperature e.g. from analog input
 }
 
 #define TempUpdatePeriod 2000
