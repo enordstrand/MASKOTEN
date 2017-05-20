@@ -14,7 +14,8 @@
 
 int maximumRange = 500; // Maximum range needed
 int minimumRange = 0; // Minimum range needed
-long duration, distance; // Duration used to calculate distance
+long duration; // Duration used to calculate distance
+float distance;
 
 // List here messages your device will transmit.
 const unsigned long TransmitMessages[] PROGMEM={127505L,0};
@@ -91,8 +92,9 @@ double ReadTankPercent() {
     //Serial.println(distance);
     //digitalWrite(LEDPin, LOW); 
   }
-  Serial.println(distance/2);
-  return distance/2; // Tank level in % of full tank.
+  Serial.println(distance);
+  return ((distance*(-10.204))+120.4); // Tank level in % of full tank.
+  //return -2;
 }
 
 double ReadTankCapacity() {
