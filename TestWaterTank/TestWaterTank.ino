@@ -66,7 +66,7 @@ void loop() {
   NMEA2000.ParseMessages();
 }
 
-double ReadTankPercent() {
+int ReadTankPercent() {
   /* The following trigPin/echoPin cycle is used to determine the
   distance of the nearest object by bouncing soundwaves off of it. */ 
   digitalWrite(trigPin, LOW); 
@@ -93,8 +93,9 @@ double ReadTankPercent() {
     //digitalWrite(LEDPin, LOW); 
   }
   Serial.println(distance);
-  return ((distance*(-10.204))+120.4); // Tank level in % of full tank.
+  // return ((distance*(-10.204))+120.4); // Tank level in % of full tank.
   //return -2;
+  return 42;
 }
 
 double ReadTankCapacity() {
