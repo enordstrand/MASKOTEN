@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <MemoryFree.h>
 #define N2k_SPI_CS_PIN 10
+#define N2k_CAN_INT_PIN 2
 #include <NMEA2000_CAN.h>  // This will automatically choose right CAN library and create suitable NMEA2000 object
 #include <N2kMessages.h>
 
@@ -66,7 +67,7 @@ void loop() {
   NMEA2000.ParseMessages();
 }
 
-int ReadTankPercent() {
+double ReadTankPercent() {
   /* The following trigPin/echoPin cycle is used to determine the
   distance of the nearest object by bouncing soundwaves off of it. */ 
   digitalWrite(trigPin, LOW); 
@@ -93,9 +94,9 @@ int ReadTankPercent() {
     //digitalWrite(LEDPin, LOW); 
   }
   Serial.println(distance);
-  // return ((distance*(-10.204))+120.4); // Tank level in % of full tank.
+  return ((distance*(-10.204))+120.4); // Tank level in % of full tank.
   //return -2;
-  return 42;
+  //return 42;
 }
 
 double ReadTankCapacity() {
